@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penjana Petikan Rawak</title>
+  <style>
+    /* General body style */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fafafa;
+      color: #333;
+    }
+
+    /* Header */
+    h1 {
+      text-align: center;
+      color: #ff6f61;
+      font-size: 2.5em;
+      margin-top: 30px;
+    }
+
+    /* Button Styling */
+    button {
+      background-color: #ff6f61;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    button:hover {
+      background-color: #ff4e42;
+    }
+
+    /* Storytelling Section */
+    .storytelling-container {
+      margin-top: 40px;
+      background-color: #f8f8f8;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 2s ease-in-out;
+      border: 2px solid #ff80ab;
+    }
+
+    .storytelling-container h2 {
+      font-size: 2.5em;
+      color: #ff6f61;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .story-text {
+      font-size: 1.3em;
+      color: #444;
+      margin: 20px 0;
+      font-style: italic;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #fff5f5;
+      border: 1px solid #ff80ab;
+    }
+
+    #story-input {
+      width: 100%;
+      height: 150px;
+      padding: 12px;
+      font-size: 1.1em;
+      border: 2px solid #ff80ab;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      background-color: #fff;
+      color: #ff6f61;
+      transition: all 0.3s ease;
+    }
+
+    #story-submit-btn {
+      background-color: #ff6f61;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 1.2em;
+      transition: background-color 0.3s ease;
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    #story-submit-btn:hover {
+      background-color: #ff4e42;
+    }
+
+    .story-container {
+      margin-top: 25px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid #ff6f61;
+      text-align: center;
+    }
+
+    .story-item {
+      font-size: 1.2em;
+      color: #333;
+      font-style: italic;
+      margin-bottom: 15px;
+    }
+
+    .story-item p {
+      margin: 0;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 600px) {
+      .story-text {
+        font-size: 1em;
+      }
+      #story-input {
+        height: 100px;
+      }
+      #story-submit-btn {
+        font-size: 1.1em;
+      }
+    }
+
+    /* Fade-in animation */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1 id="title">Random Quote Generator</h1>
+    <p id="quote">Loading...</p>
+    <button onclick="generateQuote(); playSound()">
+      <span id="getNewQuoteBtn">Get New Quote</span>
+    </button>
+    <br><br>
+
+    <label for="theme" id="themeLabel">Choose a theme:</label>
+    <select id="theme" onchange="generateQuote(); changeBackground(this.value)">
+      <option value="all">All Themes</option>
+      <option value="motivation">Motivation</option>
+      <option value="life">Life</option>
+      <option value="success">Success</option>
+      <option value="philosophy">Philosophy</option>
+      <option value="love">Love</option>
+    </select>
+    <br><br>
+
+    <label for="language" id="languageLabel">Choose Language:</label>
+    <select id="language" onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="ms">Bahasa Melayu</option>
+    </select>
+
+    <br><br>
+    <label for="search-input" id="searchLabel">Search quotes:</label>
+    <input type="text" id="search-input" placeholder="Search quotes..." onkeyup="searchQuotes()">
+    <br><br>
+    <button onclick="addFavorite()"><span id="addToFavBtn">Add to Favorites</span></button>
+    <br><br>
+    <label for="dark-mode-toggle">Dark Mode</label>
+    <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+    <br><br>
+    <div id="quote-count"></div>
+
+    <hr>
+    <h2 id="favQuotesTitle">Favorite Quotes</h2>
+    <div id="favorites-container">
+      <ul id="favorites-list"></ul>
+    </div>
+    
+    <!-- Storytelling Section -->
+    <div class="storytelling-container">
+      <h2>Storytelling Section</h2>
+      <p class="story-text" id="story-text">Once upon a time...</p>
+      <textarea id="story-input" placeholder="Write your own story here..."></textarea>
+      <br><br>
+      <button id="story-submit-btn" onclick="submitStory()">Submit Your Story</button>
+    </div>
+
+    <div class="story-container" id="stored-stories">
+      <h3>Your Stories</h3>
+      <div id="story-list"></div>
+    </div>
+  </div>
+
+  <audio id="click-sound" src="click-sound.mp3" preload="auto"></audio>
+
+  <script>
+    // The rest of your JavaScript code here...
+
+    // Example function to demonstrate use of CSS changes
+    function playSound() {
+      document.getElementById('click-sound').play();
+    }
+
+    // More functions like generateQuote(), submitStory(), etc.
+
+  </script>
+
+</body>
+</html>
